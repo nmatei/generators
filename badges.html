@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1, minimum-scale=0.5, maximum-scale=2"
+    />
     <title>Badges</title>
 
     <style>
@@ -151,6 +154,16 @@
         }
         .portrait #names {
           min-height: 30vh;
+        }
+
+        #badges {
+          margin: 5px;
+        }
+        .portrait #badges {
+          grid-template-columns: auto auto;
+        }
+        .landscape #badges {
+          grid-template-columns: auto auto;
         }
       }
     </style>

@@ -145,7 +145,3 @@ groups.innerHTML += `<div id="slices" class="circle"></div>`;
 const slices = document.querySelector("#slices");
 createSlices(slices, phrases, 850, 250);
 slices.innerHTML += `<div class="inner-circle"></div>`;
-// TMP
-// slices.style.opacity = 0.5;
-
-console.debug(titles);

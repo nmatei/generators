@@ -3,4 +3,5 @@ Page &amp; elements generators
 
 # Live
 
-- [x] [badges](https://nmatei.github.io/generators/badges)
+- [x] [Badges](https://nmatei.github.io/generators/badges)
+- [ ] [Circle Slices](https://nmatei.github.io/generators/circle-slices)

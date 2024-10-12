@@ -48,6 +48,8 @@ package-lock.json
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
 
+js/private.js
+
 # TypeScript cache
 *.tsbuildinfo
 

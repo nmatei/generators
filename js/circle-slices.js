@@ -130,6 +130,13 @@ function initEvents() {
   document.querySelector("#rotate").addEventListener("input", event => {
     const value = event.target.value;
     document.querySelector("#groups").style.transform = `rotate(${value}deg)`;
+    document.querySelector("#rotateDegrees").value = value;
+  });
+
+  document.querySelector("#rotateDegrees").addEventListener("input", event => {
+    const value = event.target.value;
+    document.querySelector("#groups").style.transform = `rotate(${value}deg)`;
+    document.querySelector("#rotate").value = value;
   });
 }
 

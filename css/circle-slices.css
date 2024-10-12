@@ -12,9 +12,17 @@ body {
   margin: 20px auto;
 }
 
+#settings {
+  padding: 20px;
+}
 .form-field {
   display: flex;
   flex-direction: row;
+  gap: 5px;
+}
+
+.form-field label {
+  font-weight: bold;
 }
 
 .circle {
@@ -119,4 +127,10 @@ body {
   color: #0096d6;
   padding-left: 35px;
   font-weight: bold;
+}
+
+@media print {
+  #settings {
+    display: none;
+  }
 }

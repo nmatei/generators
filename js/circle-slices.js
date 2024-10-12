@@ -90,6 +90,10 @@ phrases = phrases
     text: line
   }));
 
+function $(selector, parent) {
+  return (parent || document).querySelector(selector);
+}
+
 function createObjects(phrases) {
   const length = phrases.reduce((acc, item) => acc + (item.children || [1]).length, 0);
   const radius = 360 / length;
@@ -117,39 +121,62 @@ function createSlices(circle, phrases, width = 800, innerWidth = 250) {
   circle.style.width = `${width}px`;
   circle.style.height = `${width}px`;
   circle.style.setProperty("--line-width", `${(width - innerWidth) / 2}px`);
-  // circle.style.setProperty("--padding-start", `${innerWidth + 10}px`);
   circle.style.setProperty("--padding-start", `${innerWidth}px`);
-  circle.style.setProperty("--inner-width", `${innerWidth}px`);
 
   const objects = createObjects(phrases);
   circle.innerHTML = objects.map(({ line }) => line).join("");
   circle.innerHTML += objects.map(({ text }) => text).join("");
 }
 
+function rotateMainCircle(degrees) {
+  $("#groups").style.transform = `rotate(${degrees}deg)`;
+  $("#center").style.transform = `rotate(-${degrees}deg)`;
+}
+
 function initEvents() {
-  document.querySelector("#rotate").addEventListener("input", event => {
+  $("#rotate").addEventListener("input", event => {
     const value = event.target.value;
-    document.querySelector("#groups").style.transform = `rotate(${value}deg)`;
-    document.querySelector("#rotateDegrees").value = value;
+    rotateMainCircle(value);
+    $("#rotateDegrees").value = value;
   });
 
-  document.querySelector("#rotateDegrees").addEventListener("input", event => {
+  $("#rotateDegrees").addEventListener("input", event => {
     const value = event.target.value;
-    document.querySelector("#groups").style.transform = `rotate(${value}deg)`;
-    document.querySelector("#rotate").value = value;
+    rotateMainCircle(value);
+    $("#rotate").value = value;
   });
 }
 
-const groups = document.querySelector("#groups");
+const groups = $("#groups");
 createSlices(groups, titles, 1100, 850);
 groups.innerHTML += `<div id="slices" class="circle"></div>`;
 
-const slices = document.querySelector("#slices");
+const slices = $("#slices");
 createSlices(slices, phrases, 850, 250);
-slices.innerHTML += `<div class="inner-circle"></div>`;
+slices.innerHTML += `<div id="center" class="circle"></div>`;
 
-// document.querySelector("#slices .inner-circle").innerHTML = `<div id="dot" class="inner-circle"></div>`;
-// const dot = document.querySelector("#dot");
+const center = $("#center");
+center.style.width = "250px";
+center.style.height = "250px";
+
+let centerText = `
+Viața de rugăciune activă
+Spirit de slujitor
+Practici etice și morale
+Exercitarea credinței
+`;
+centerText = centerText
+  .split("\n")
+  .map(line => line.trim())
+  .filter(line => line.length > 0);
+
+center.innerHTML = `<h2>Disciplina spirituală</h2><div class="grid"></div>`;
+$(".grid", center).innerHTML += centerText.map(text => `<div class="center-text">${text}</div>`).join("");
+
+center.innerHTML += `<h2>&nbsp;</h2>`;
+
+// $("#slices .circle").innerHTML = `<div id="dot" class="circle"></div>`;
+// const dot = $("#dot");
 // dot.style.width = "10px";
 // dot.style.height = "10px";
 

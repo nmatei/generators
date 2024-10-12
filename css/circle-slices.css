@@ -16,6 +16,7 @@ body {
   padding: 20px;
 }
 .form-field {
+  margin: 6px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -23,6 +24,8 @@ body {
 }
 
 .form-field label {
+  min-width: 13em;
+  text-align: right;
   font-weight: bold;
 }
 
@@ -37,7 +40,7 @@ body {
   align-items: center;
   overflow: hidden;
   background-color: white;
-  transition: 2s;
+  transition: 1s;
 }
 
 /*.slice-line:before {*/

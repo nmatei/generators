@@ -24,6 +24,16 @@ details summary {
   width: 360px;
 }
 
+.content {
+  width: 100%;
+  border-radius: 5px;
+  min-height: 20vh;
+  padding: 10px 10px;
+}
+#content {
+  min-height: 40vh;
+}
+
 .form-field {
   margin: 6px;
   display: flex;

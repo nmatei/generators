@@ -21,14 +21,17 @@ function storeNames(names) {
 }
 
 function initEvents() {
-  $("#names").addEventListener("input", function () {
-    const names = this.value
-      .split("\n")
-      .map(name => name.trim())
-      .filter(name => name);
-    storeNames(names);
-    displayNames(names, portrait);
-  });
+  $("#names").addEventListener(
+    "input",
+    debounce(function () {
+      const names = this.value
+        .split("\n")
+        .map(name => name.trim())
+        .filter(name => name);
+      storeNames(names);
+      displayNames(names, portrait);
+    }, 300)
+  );
 }
 
 function displayNames(names, portrait = true) {

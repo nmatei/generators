@@ -1,7 +1,7 @@
 // TODO check this examples:
 //   https://stackoverflow.com/questions/10028182/how-to-make-a-pie-chart-in-css
 
-let text = `
+const defaultText = `
 #1 Darul de a rezolva probleme
 Discernământ spiritual interior
 Creativitate și inventivitate
@@ -65,7 +65,36 @@ Rol și responsabilitate de soț
 Cooperare în familie
 `;
 
+const defaultCenterText = `
+# Disciplina
+Viața de rugăciune activă
+Spirit de slujitor
+Practici etice și morale
+Exercitarea credinței
+
+# Spirituală
+`;
+
+const defaultsValues = {
+  groupSize: 1100,
+  slicesSize: 950,
+  centerSize: 250,
+  text: defaultText,
+  centerText: defaultCenterText
+};
+
+const storedContent = getStoredContent();
+let { text, centerText } = storedContent;
 let { phrases, titles } = preparePhrases(text);
+
+function getStoredContent() {
+  const content = JSON.parse(localStorage.getItem("generator-slices")) || {};
+  return { ...defaultsValues, ...content };
+}
+
+function storeContent(content) {
+  localStorage.setItem("generator-slices", JSON.stringify(content));
+}
 
 function preparePhrases(text) {
   let phrases = text
@@ -157,7 +186,17 @@ function syncValues(selector1, selector2) {
   });
 }
 
+function loadPreviousValues() {
+  $("#groupSize").value = storedContent.groupSize;
+  $("#slicesSize").value = storedContent.slicesSize;
+  $("#centerSize").value = storedContent.centerSize;
+  $("#content").value = text;
+  $("#centerContent").value = centerText;
+}
+
 function initEvents() {
+  loadPreviousValues();
+
   syncValues("#rotate", "#rotateDegrees");
   syncValues("#zoom", "#zoomPercent");
 
@@ -190,11 +229,34 @@ function initEvents() {
   ["groupSize", "slicesSize", "centerSize"].forEach(id => {
     $(`#${id}`).addEventListener(
       "change",
-      debounce(() => {
+      debounce(function () {
+        storedContent[id] = parseInt(this.value);
+        storeContent(storedContent);
         start();
       }, 500)
     );
   });
+  $("#content").addEventListener(
+    "input",
+    debounce(function () {
+      const text = this.value.trim();
+      storedContent.text = (text || "").trim();
+      storeContent(storedContent);
+      ({ phrases, titles } = preparePhrases(text));
+      start();
+    }, 500)
+  );
+
+  $("#centerContent").addEventListener(
+    "input",
+    debounce(function () {
+      const text = this.value.trim();
+      storedContent.centerText = (text || "").trim();
+      storeContent(storedContent);
+      centerText = text;
+      start();
+    }, 500)
+  );
 }
 
 function createMiddleGrid(circle, width) {
@@ -204,20 +266,12 @@ function createMiddleGrid(circle, width) {
   circle.style.width = `${width}px`;
   circle.style.height = `${width}px`;
 
-  let centerText = `
-Viața de rugăciune activă
-Spirit de slujitor
-Practici etice și morale
-Exercitarea credinței
-`;
-  centerText = centerText
-    .split("\n")
-    .map(line => line.trim())
-    .filter(line => line.length > 0);
-
-  circle.innerHTML = `<h2>Disciplina</h2><div class="grid"></div>`;
-  $(".grid", circle).innerHTML += centerText.map(text => `<div class="center-text">${text}</div>`).join("");
-  circle.innerHTML += `<h2>Spirituală</h2>`;
+  const { titles } = preparePhrases(centerText);
+  circle.innerHTML = "";
+  titles.forEach(({ text, children }, i) => {
+    circle.innerHTML += `<h2>${text}</h2><div class="grid" id="inner-grid-${i}"></div>`;
+    $(`#inner-grid-${i}`, circle).innerHTML += children.map(text => `<div class="center-text">${text}</div>`).join("");
+  });
   return circle;
 }
 

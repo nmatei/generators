@@ -24,7 +24,7 @@ Enter your **#groups and items** and generate a nice circle slice for each group
 
 <script>
 CircleSlices.render({
-  renderTo: "#demo",
+  renderTo: "#groups",
   groupSize: 420,
   slicesSize: 350,
   centerSize: 100,

@@ -48,156 +48,11 @@ details summary {
   font-weight: bold;
 }
 
-.circle {
-  width: 300px;
-  height: 300px;
-  border-radius: 50%;
-  position: relative;
-  border: 2px solid green;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  background-color: white;
-  transition: 1s;
-}
-
-.slice-line {
-  position: absolute;
-  height: 2px;
-  top: calc(50% - 1px);
-  left: 0;
-  right: 0;
-  border-right: var(--line-width) solid var(--color);
-  transform: rotate(var(--angle));
-  box-sizing: border-box;
-}
-.slice-text {
-  position: absolute;
-  height: 0;
-  line-height: 0;
-  top: calc(50%);
-  left: 0;
-  right: 0;
-  border-left: var(--text-width) solid transparent;
-  transform: rotate(var(--angle));
-  box-sizing: border-box;
-  padding-left: var(--padding-start);
-  display: flex;
-  align-items: center;
-}
-.phrase-inner {
-  /* TODO initial font size */
-  font-size: 16px;
-  line-height: 24px;
-  z-index: 1;
-  width: 100%;
-  padding: 0 10px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  cursor: pointer;
-  transition: 0.5s;
-}
-.phrase-inner:hover {
-  color: #0096d6;
-}
-
-#groups {
-  --zoom: 100%;
-  zoom: var(--zoom);
-  background: #d2f7d5;
-  border-width: 4px;
-}
-#slices {
-  background: #ddf0df;
-}
-#groups > .slice-line {
-  height: 4px;
-  top: calc(50% - 2px);
-  z-index: 1;
-}
-#groups > .slice-text {
-  font-weight: bold;
-  text-align: center;
-  color: #057988;
-}
-
-/* .rotate90 */
-#groups > .slice-text {
-  justify-content: center;
-}
-#groups > .slice-text > .phrase-inner {
-  transform: rotate(90deg);
-  position: absolute;
-  width: 150px;
-}
-
-#groups > .slice-text > .phrase-inner:hover {
-  /*font-size: 18px;*/
-}
-
-#slices .phrase-inner {
-  text-wrap: nowrap;
-  padding: 0 5px 0 20px;
-}
-#slices .phrase-inner:hover {
-  color: #0096d6;
-  padding-left: 35px;
-}
-
-#center {
-  z-index: 1;
-  width: 250px;
-  height: 250px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  align-content: center;
-}
-#center h2 {
-  margin: 0;
-  font-size: 20px;
-  font-variant-caps: small-caps;
-}
-#center > .grid {
-  margin: 10px 12px;
-}
-.grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-}
-.grid > div {
-  padding: 15px 5px 15px 5px;
-  display: flex;
-  align-items: center;
-}
-
-.grid div:nth-child(1),
-.grid div:nth-child(3) {
-  border-right: 2px solid #333333;
-  text-align: right;
-  padding-left: 0;
-}
-.grid div:nth-child(1),
-.grid div:nth-child(2) {
-  border-bottom: 2px solid #333333;
-}
-
 .no-transition {
   transition: none !important;
 }
 
-@media screen and (max-width: 1000px) {
-  #groups {
-    /* TODO zoom seems to have some problems in mobile - test it and find how to improve it */
-    /*zoom: 0.8;*/
-  }
-}
 @media screen and (max-width: 800px) {
-  #groups {
-    /*zoom: 0.6;*/
-  }
   #settings {
     padding: 20px 10px;
   }
@@ -210,9 +65,6 @@ details summary {
   }
 }
 @media screen and (max-width: 600px) {
-  #groups {
-    /*zoom: 0.5;*/
-  }
   .form-field label {
     min-width: 6em;
   }
@@ -221,21 +73,9 @@ details summary {
     width: 180px;
   }
 }
-@media screen and (max-width: 500px) {
-  #groups {
-    /*zoom: 0.35;*/
-  }
-}
 
 @media print {
   #settings {
     display: none;
   }
-}
-
-/* TODO disable animations when render ?*/
-
-/* TODO move to custom settings / css */
-#groups > .slice-text[data-index="8"] > .phrase-inner {
-  width: 180px;
 }

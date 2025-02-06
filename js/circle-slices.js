@@ -1,6 +1,11 @@
 // TODO check this examples:
 //   https://stackoverflow.com/questions/10028182/how-to-make-a-pie-chart-in-css
 
+/**
+ * @global
+ * @var {Object} CircleSlices
+ */
+
 const defaultText = `
 #1 Darul de a rezolva probleme
 Discernământ spiritual interior
@@ -76,16 +81,11 @@ Exercitarea credinței
 `;
 
 const defaultsValues = {
-  groupSize: 1100,
-  slicesSize: 950,
-  centerSize: 250,
   text: defaultText,
   centerText: defaultCenterText
 };
 
 const storedContent = getStoredContent();
-let { text, centerText } = storedContent;
-let { phrases, titles } = preparePhrases(text);
 
 function getStoredContent() {
   const content = JSON.parse(localStorage.getItem("generator-slices")) || {};
@@ -94,82 +94,6 @@ function getStoredContent() {
 
 function storeContent(content) {
   localStorage.setItem("generator-slices", JSON.stringify(content));
-}
-
-function preparePhrases(text) {
-  let phrases = text
-    .split("\n")
-    .map(line => line.trim())
-    .filter(line => line.length > 0);
-
-  //const titles = phrases.filter(line => line.startsWith("#"));
-  // group phrases by titles and remove titles from phrases (return title + phrases.length after them)
-  const titles = phrases.reduce((acc, line) => {
-    if (line.startsWith("#")) {
-      acc.push({
-        text: line.substring(1).trim(),
-        children: []
-      });
-    } else {
-      acc[acc.length - 1].children.push(line);
-    }
-    return acc;
-  }, []);
-
-  phrases = phrases
-    .filter(line => !line.startsWith("#"))
-    .map(line => ({
-      text: line
-    }));
-
-  return {
-    titles,
-    phrases
-  };
-}
-
-function createObjects(phrases, color) {
-  const length = phrases.reduce((acc, item) => acc + (item.children || [1]).length, 0);
-  const radius = 360 / length;
-  const odd = length % 2 === 1 ? 0 : 1;
-  let index = 0;
-  return phrases.map(({ text, children = [] }, i) => {
-    const slices = children.length || 1;
-    index += slices;
-    const elementAngle = Math.round(slices * radius);
-    const angle = Math.round(index * radius - radius / 2);
-    const lineColor = color || `hsl(${Math.round(index * radius)}, 100%, 50%)`;
-    const lineAngle = angle + odd * Math.round(radius / 2);
-    const textAngle = angle - elementAngle / 2 + odd * Math.round(radius / 2);
-
-    return {
-      line: `<div data-index="${i + 1}" class="slice-line" style="--angle: ${lineAngle}deg; --color: ${lineColor}"></div>`,
-      text: `<div data-index="${i + 1}" class="slice-text" style="--angle: ${textAngle}deg;">
-          <div class="phrase-inner">${text}</div>
-        </div>`
-    };
-  });
-}
-
-function createSlices(circle, phrases, width = 800, innerWidth = 250, lineWidth, color) {
-  if (typeof circle === "string") {
-    circle = $(circle);
-  }
-  circle.style.width = `${width}px`;
-  circle.style.height = `${width}px`;
-  circle.style.setProperty("--line-width", `${lineWidth || (width - innerWidth) / 2}px`);
-  circle.style.setProperty("--text-width", `${(width - innerWidth) / 2}px`);
-  circle.style.setProperty("--padding-start", `${innerWidth}px`);
-
-  const objects = createObjects(phrases, color);
-  circle.innerHTML = objects.map(({ line }) => line).join("");
-  circle.innerHTML += objects.map(({ text }) => text).join("");
-  return circle;
-}
-
-function rotateMainCircle(degrees) {
-  $("#groups").style.transform = `rotate(${degrees}deg)`;
-  $("#center").style.transform = `rotate(${degrees * -1}deg)`;
 }
 
 function syncValues(selector1, selector2) {
@@ -190,13 +114,12 @@ function loadPreviousValues() {
   $("#groupSize").value = storedContent.groupSize;
   $("#slicesSize").value = storedContent.slicesSize;
   $("#centerSize").value = storedContent.centerSize;
-  $("#content").value = text;
-  $("#centerContent").value = centerText;
+  $("#content").value = storedContent.text;
+  $("#centerContent").value = storedContent.centerText;
+  console.warn("storedContent", storedContent);
 }
 
 function initEvents() {
-  loadPreviousValues();
-
   syncValues("#rotate", "#rotateDegrees");
   syncValues("#zoom", "#zoomPercent");
 
@@ -204,7 +127,7 @@ function initEvents() {
     "input",
     debounce(event => {
       const value = event.target.value;
-      rotateMainCircle(-value);
+      CircleSlices.rotate("#groups", -value);
     }, 300)
   );
   $("#zoom").addEventListener(
@@ -215,15 +138,10 @@ function initEvents() {
     }, 400)
   );
 
-  $("#groups").addEventListener("click", event => {
-    const target = event.target;
-    if (target.closest(".phrase-inner")) {
-      const slice = target.closest(".slice-text");
-      const angle = parseFloat(slice.style.getPropertyValue("--angle").replace("deg", ""));
-      rotateMainCircle(-angle);
-      $("#rotate").value = angle;
-      $("#rotateDegrees").value = angle;
-    }
+  $("#groups").addEventListener("rotate", event => {
+    const angle = event.detail.angle;
+    $("#rotate").value = angle;
+    $("#rotateDegrees").value = angle;
   });
 
   ["groupSize", "slicesSize", "centerSize"].forEach(id => {
@@ -242,7 +160,6 @@ function initEvents() {
       const text = this.value.trim();
       storedContent.text = (text || "").trim();
       storeContent(storedContent);
-      ({ phrases, titles } = preparePhrases(text));
       start();
     }, 500)
   );
@@ -253,52 +170,42 @@ function initEvents() {
       const text = this.value.trim();
       storedContent.centerText = (text || "").trim();
       storeContent(storedContent);
-      centerText = text;
       start();
     }, 500)
   );
 }
 
-function createMiddleGrid(circle, width) {
-  if (typeof circle === "string") {
-    circle = $(circle);
-  }
-  circle.style.width = `${width}px`;
-  circle.style.height = `${width}px`;
-
-  const { titles } = preparePhrases(centerText);
-  circle.innerHTML = "";
-  titles.forEach(({ text, children }, i) => {
-    circle.innerHTML += `<h2>${text}</h2><div class="grid" id="inner-grid-${i}"></div>`;
-    $(`#inner-grid-${i}`, circle).innerHTML += children.map(text => `<div class="center-text">${text}</div>`).join("");
-  });
-  return circle;
-}
-
 function start() {
-  const groupSize = parseInt($("#groupSize").value) || 1100;
-  const slicesSize = parseInt($("#slicesSize").value) || 850;
-  const centerSize = parseInt($("#centerSize").value) || 250;
-
-  const groups = createSlices("#groups", titles, groupSize, slicesSize, (groupSize - centerSize) / 2);
-  groups.innerHTML += `<div id="slices" class="circle"></div>`;
-
-  const slices = createSlices("#slices", phrases, slicesSize, centerSize);
-  slices.innerHTML += `<div id="center" class="circle"></div>`;
-
-  createMiddleGrid("#center", centerSize);
-  // $("#center").style.width = `${centerSize}px`;
-  // $("#center").style.height = `${centerSize}px`;
-
-  //wait until animation is done then decrease font
-  setTimeout(() => {
-    decreaseFont("#slices .phrase-inner", "", 26);
-  }, 1000);
+  CircleSlices.render(storedContent);
 }
 
+loadPreviousValues();
 initEvents();
-
 start();
+
+CircleSlices.render({
+  renderTo: "#demo",
+  groupSize: 420,
+  slicesSize: 350,
+  centerSize: 100,
+  text: `
+# 🔵 HTML
+elements
+structure
+semantics
+
+# 🎨 CSS
+styles
+layout
+responsiveness
+
+# ⚡ JS
+logic
+interaction
+behavior
+`,
+  centerText: `# 🚀 Web`
+});
 
 // TODO check this changes
 //  - color slices with different colors

@@ -3,19 +3,19 @@ Page &amp; elements generators
 
 # Live
 
-## [Badges](https://nmatei.github.io/generators/badges)
+## 🪪 [Badges](https://nmatei.github.io/generators/badges)
 
 Enter your **meeting/conference attenders** and generate a badge for each one.
 ![badge.png](images/badge.png)
 
 
-## [Circle Slices](https://nmatei.github.io/generators/circle-slices)
+## 🔵 [Circle Slices](https://nmatei.github.io/generators/circle-slices)
 
 Enter your **#groups and items** and generate a nice circle slice for each group. (Examples: groups, school teams + members, title + sub categories, etc.)  
 ![orar.png](images/orar.png)
 
 
-### include Circle Slices to your page
+### Include Circle Slices to your page
 
 ```html
 <div id="groups"></div>
@@ -48,3 +48,5 @@ behavior
 });
 </script>
 ```
+
+![circle-web.png](images/circle-web.png)

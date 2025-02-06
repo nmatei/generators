@@ -183,29 +183,5 @@ loadPreviousValues();
 initEvents();
 start();
 
-CircleSlices.render({
-  renderTo: "#demo",
-  groupSize: 420,
-  slicesSize: 350,
-  centerSize: 100,
-  text: `
-# 🔵 HTML
-elements
-structure
-semantics
-
-# 🎨 CSS
-styles
-layout
-responsiveness
-
-# ⚡ JS
-logic
-interaction
-behavior
-`,
-  centerText: `# 🚀 Web`
-});
-
 // TODO check this changes
 //  - color slices with different colors

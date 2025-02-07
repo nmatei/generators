@@ -23,7 +23,7 @@ Enter your **#groups and items** and generate a nice circle slice for each group
 <script src="https://nmatei.github.io/generators/docs/circle-slices.js"></script>
 
 <script>
-CircleSlices.render({
+const options = CircleSlices.render({
   renderTo: "#groups",
   groupSize: 420,
   slicesSize: 350,
@@ -46,6 +46,14 @@ behavior
 `,
   centerText: `# 🚀 Web`
 });
+ 
+console.info("options", options);
+
+document.querySelector("#groups").addEventListener("rotate", event => {
+    const { angle, slice } = event.detail;
+    console.info("rotate %o deg [ %o ]", angle, slice.innerText, slice);
+});
+
 </script>
 ```
 

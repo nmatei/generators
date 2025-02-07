@@ -116,7 +116,14 @@ function initEvents(options) {
       const slice = target.closest(".slice-text");
       const angle = parseFloat(slice.style.getPropertyValue("--angle").replace("deg", ""));
       rotate(options.renderTo, -angle);
-      $(options.renderTo).dispatchEvent(new CustomEvent("rotate", { detail: { angle } }));
+      $(options.renderTo).dispatchEvent(
+        new CustomEvent("rotate", {
+          detail: {
+            angle,
+            slice
+          }
+        })
+      );
     }
   });
 }
@@ -160,6 +167,10 @@ export function render(options) {
   });
   start(storedOptions);
   initEvents(storedOptions);
+  return {
+    titles: [...titles],
+    phrases: [...phrases]
+  };
 }
 
 export function update(options) {

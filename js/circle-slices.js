@@ -139,7 +139,8 @@ function initEvents() {
   );
 
   $("#groups").addEventListener("rotate", event => {
-    const angle = event.detail.angle;
+    const { angle, slice } = event.detail;
+    console.info("rotate %o deg [ %o ]", angle, slice.innerText, slice);
     $("#rotate").value = angle;
     $("#rotateDegrees").value = angle;
   });
@@ -176,7 +177,8 @@ function initEvents() {
 }
 
 function start() {
-  CircleSlices.render(storedContent);
+  const options = CircleSlices.render(storedContent);
+  console.info("options", options);
 }
 
 loadPreviousValues();

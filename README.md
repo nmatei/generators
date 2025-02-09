@@ -28,6 +28,7 @@ const options = CircleSlices.render({
   groupSize: 420,
   slicesSize: 350,
   centerSize: 100,
+  default: 'logic',
   text: `
 # 🔵 HTML
 elements

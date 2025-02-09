@@ -110,6 +110,16 @@ export function rotate(target, degrees) {
 }
 
 function initEvents(options) {
+  // TODO improve this to allow more formats
+  if (options.default) {
+    const i = options.phrases.findIndex(phrase => phrase.text === options.default);
+    const slice = $(`.slice-text[data-index="${i + 1}"]`);
+    if (slice) {
+      const angle = parseFloat(slice.style.getPropertyValue("--angle").replace("deg", ""));
+      rotate(options.renderTo, -angle);
+    }
+  }
+
   $(options.renderTo).addEventListener("click", event => {
     const target = event.target;
     if (target.closest(".phrase-inner")) {
@@ -133,17 +143,22 @@ function start(options) {
 
   let renderTo = $(options.renderTo);
   if (!renderTo) {
-    console.warn("%o not found, creating it in body", options.renderTo);
+    console.info("%o not found, creating it in body", options.renderTo);
     renderTo = document.createElement("div");
-    renderTo.id = options.renderTo.substring(1);
+    renderTo.id = options.renderTo.startsWith("#") ? options.renderTo.substring(1) : "groups";
     document.body.appendChild(renderTo);
+  } else {
+    if (!renderTo.id) {
+      renderTo.id = "groups";
+    }
   }
+
   renderTo.classList.add("circle-slice-group", "circle");
   const groups = createSlices(options.renderTo, options.titles, groupSize, slicesSize, (groupSize - centerSize) / 2);
   // TODO config for slices id or dynamic id
   groups.innerHTML += `<div class="circle-slices circle"></div>`;
   const slicesCircle = $(".circle-slices", groups);
-  const slicesCircleId = options.renderTo + "-slices";
+  const slicesCircleId = renderTo.id + "-slices";
   slicesCircle.id = slicesCircleId;
   const slices = createSlices(slicesCircle, options.phrases, slicesSize, centerSize);
   slices.innerHTML += `<div class="circle-slice-center circle"></div>`;
@@ -152,7 +167,7 @@ function start(options) {
 
   //wait until animation is done then decrease font
   setTimeout(() => {
-    decreaseFont(`${slicesCircleId} .phrase-inner`, "", 26);
+    decreaseFont(`#${slicesCircleId} .phrase-inner`, "", 26);
   }, 1000);
 }
 

@@ -116,7 +116,6 @@ function loadPreviousValues() {
   $("#centerSize").value = storedContent.centerSize;
   $("#content").value = storedContent.text;
   $("#centerContent").value = storedContent.centerText;
-  console.warn("storedContent", storedContent);
 }
 
 function initEvents() {
@@ -178,7 +177,7 @@ function initEvents() {
 
 function start() {
   const options = CircleSlices.render(storedContent);
-  console.info("options", options);
+  console.info("start", options);
 }
 
 loadPreviousValues();

@@ -126,11 +126,13 @@ function initEvents(options) {
       const slice = target.closest(".slice-text");
       const angle = parseFloat(slice.style.getPropertyValue("--angle").replace("deg", ""));
       rotate(options.renderTo, -angle);
+      const index = parseInt(slice.getAttribute("data-index")) - 1;
       $(options.renderTo).dispatchEvent(
         new CustomEvent("rotate", {
           detail: {
             angle,
-            slice
+            slice,
+            index
           }
         })
       );

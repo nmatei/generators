@@ -24,7 +24,8 @@ function initEvents() {
   $("#names").addEventListener(
     "input",
     debounce(function () {
-      const names = this.value
+      const value = this.value || "Enter Names";
+      const names = value
         .split("\n")
         .map(name => name.trim())
         .filter(name => name);

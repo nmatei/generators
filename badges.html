@@ -147,6 +147,22 @@
         transform: rotate(180deg);
       }
 
+      @media (min-width: 800px) {
+        #config {
+          width: 800px;
+          display: flex;
+          align-items: center;
+          gap: 20px;
+          padding: 20px 20px 5px 20px;
+        }
+        #config-labels {
+          flex: 1;
+        }
+        #config-input {
+          flex: 1;
+        }
+      }
+
       /* for small screen use column*/
       @media (max-width: 600px) {
         .portrait {
@@ -175,26 +191,30 @@
       }
     </style>
   </head>
-  <body class="A4 portrait">
+  <body class="A4 landscape">
     <div id="config" class="no-print">
-      <h1>
-        Print Badges
-        <button id="print-btn" onclick="window.print()" title="Print / Preview">🖨️</button>
-      </h1>
-      <div>
-        <label for="portrait">Portrait</label>
-        <input type="radio" name="orientation" id="portrait" checked onchange="setOrientation(true)" />
-        <label for="landscape">Landscape</label>
-        <input type="radio" name="orientation" id="landscape" onchange="setOrientation(false)" />
+      <div id="config-labels">
+        <h1>
+          Print Badges
+          <button id="print-btn" onclick="window.print()" title="Print / Preview">🖨️</button>
+        </h1>
+        <div>
+          <label for="portrait">Portrait</label>
+          <input type="radio" name="orientation" id="portrait" onchange="setOrientation(true)" />
+          <label for="landscape">Landscape</label>
+          <input type="radio" name="orientation" id="landscape" checked onchange="setOrientation(false)" />
+        </div>
+        <div>
+          <label for="names">Enter names (each name in new line)</label>
+        </div>
       </div>
-      <div>
-        <label for="names">Enter names (each name in new line)</label>
-      </div>
-      <textarea
-        id="names"
-        placeholder="First Name
+      <div id="config-input">
+        <textarea
+          id="names"
+          placeholder="First Name
 Your Name"
-      ></textarea>
+        ></textarea>
+      </div>
     </div>
     <div id="badges"></div>
 

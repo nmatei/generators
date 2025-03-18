@@ -58,6 +58,6 @@ behavior
 
 ![circle-web.png](images/circle-web.png)
 
-# TODOs
+# 📋 Developers TODOs (items to improve)
 
 - [ ] bold/normal config for badge names

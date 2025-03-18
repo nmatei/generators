@@ -61,3 +61,4 @@ behavior
 # 📋 Developers TODOs (items to improve)
 
 - [ ] bold/normal config for badge names
+- [ ] config for badge size

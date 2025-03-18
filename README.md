@@ -1,4 +1,5 @@
 # Generators
+
 Page &amp; elements generators
 
 # Live
@@ -8,12 +9,10 @@ Page &amp; elements generators
 Enter your **meeting/conference attenders** and generate a badge for each one.
 ![badge.png](images/badge.png)
 
-
 ## 🔵 [Circle Slices](https://nmatei.github.io/generators/circle-slices)
 
 Enter your **#groups and items** and generate a nice circle slice for each group. (Examples: groups, school teams + members, title + sub categories, etc.)  
 ![orar.png](images/orar.png)
-
 
 ### Include Circle Slices to your page
 
@@ -23,13 +22,13 @@ Enter your **#groups and items** and generate a nice circle slice for each group
 <script src="https://nmatei.github.io/generators/docs/circle-slices.js"></script>
 
 <script>
-const options = CircleSlices.render({
-  renderTo: "#groups",
-  groupSize: 420,
-  slicesSize: 350,
-  centerSize: 100,
-  default: 'logic',
-  text: `
+  const options = CircleSlices.render({
+    renderTo: "#groups",
+    groupSize: 420,
+    slicesSize: 350,
+    centerSize: 100,
+    default: "logic",
+    text: `
 # 🔵 HTML
 elements
 structure
@@ -45,17 +44,20 @@ logic
 interaction
 behavior
 `,
-  centerText: `# 🚀 Web`
-});
- 
-console.info("options", options);
+    centerText: `# 🚀 Web`
+  });
 
-document.querySelector("#groups").addEventListener("rotate", event => {
+  console.info("options", options);
+
+  document.querySelector("#groups").addEventListener("rotate", event => {
     const { angle, slice } = event.detail;
     console.info("rotate %o deg [ %o ]", angle, slice.innerText, slice);
-});
-
+  });
 </script>
 ```
 
 ![circle-web.png](images/circle-web.png)
+
+# TODOs
+
+- [ ] bold/normal config for badge names

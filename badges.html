@@ -9,21 +9,25 @@
     <title>Conference Badge generator</title>
 
     <style>
+      :root {
+        --max-width: 1050px;
+      }
+
       body {
         -webkit-print-color-adjust: exact;
         margin: 0;
         padding: 0;
         display: flex;
-        justify-content: center;
+        flex-direction: column;
+        align-items: center;
         background: #f5f5f5;
       }
 
       .portrait {
-        flex-direction: row;
+        flex-direction: column;
       }
       .landscape {
         flex-direction: column;
-        align-items: center;
       }
 
       body:before {
@@ -221,9 +225,85 @@
           grid-template-columns: auto auto;
         }
       }
+
+      .main-header {
+        width: 100%;
+        background-color: #333;
+        color: white;
+        padding: 10px 0;
+        text-align: center;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .header-container {
+        max-width: var(--max-width);
+        margin: 0 auto;
+        padding: 0 15px;
+        width: 100%;
+      }
+
+      .main-header nav {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .fill {
+        flex: 1;
+      }
+
+      .main-header a {
+        color: white;
+        text-decoration: none;
+        font-size: 14px;
+        transition: color 0.3s;
+      }
+
+      .main-header a:hover {
+        color: #90caf9;
+        text-decoration: underline;
+      }
+
+      .header-separator {
+        color: #666;
+      }
+
+      @media (max-width: 600px) {
+        .main-header {
+          padding: 8px 0;
+        }
+        .main-header a {
+          font-size: 12px;
+        }
+      }
+
+      /* for small screen use column*/
+      @media (max-width: 600px) {
+        .portrait {
+          flex-direction: column;
+        }
+        .landscape {
+          flex-direction: column;
+        }
+      }
     </style>
   </head>
   <body class="A4 landscape">
+    <header class="main-header no-print">
+      <div class="header-container">
+        <nav>
+          <a href="https://nmatei.github.io/generators">Generators</a>
+          <span class="header-separator">|</span>
+          <span class="fill"></span>
+          <a href="https://nmatei.github.io" target="_blank" class="author"
+            >Created by Nicolae Matei [nmatei.github.io]</a
+          >
+        </nav>
+      </div>
+    </header>
     <div id="config" class="no-print">
       <div id="config-labels">
         <h1>
@@ -257,7 +337,7 @@
                 <path d="M234.666667 85.333333h554.666666v213.333334H234.666667z" fill="#90CAF9"></path>
                 <path
                   d="M800 661.333333h-576c-17.066667 0-32-14.933333-32-32s14.933333-32 32-32h576c17.066667 0 32 14.933333 32 32s-14.933333 32-32 32z"
-                  fill="#242424"
+                  fill="#424242"
                 ></path>
                 <path d="M234.666667 661.333333h554.666666v234.666667H234.666667z" fill="#90CAF9"></path>
                 <path d="M234.666667 618.666667h554.666666v42.666666H234.666667z" fill="#42A5F5"></path>

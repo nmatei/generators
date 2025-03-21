@@ -5,6 +5,26 @@ function setOrientation(portraitValue) {
   portrait = portraitValue;
   document.body.classList.remove(portraitValue ? "landscape" : "portrait");
   document.body.classList.add(portraitValue ? "portrait" : "landscape");
+
+  // Set print orientation dynamically
+  const style = document.getElementById("print-orientation") || document.createElement("style");
+  if (!style.id) {
+    style.id = "print-orientation";
+    document.head.appendChild(style);
+  }
+
+  style.textContent = `
+    @media print {
+      @page {
+        size: A4 ${portraitValue ? "portrait" : "landscape"};
+      }
+    }
+  `;
+
+  // Update radio buttons to match orientation
+  document.getElementById("portrait").checked = portraitValue;
+  document.getElementById("landscape").checked = !portraitValue;
+
   displayNames(getStoredNames(), portraitValue);
 }
 
@@ -69,4 +89,8 @@ function displayNames(names, portrait = true) {
 const names = getStoredNames();
 $("#names").value = names.join("\n");
 displayNames(names, portrait);
+
+// Initialize orientation based on body class
+const initialPortrait = document.body.classList.contains("portrait");
+setOrientation(initialPortrait);
 initEvents();

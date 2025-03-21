@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, user-scalable=no, initial-scale=1, minimum-scale=0.5, maximum-scale=2"
     />
-    <title>Badges</title>
+    <title>Conference Badge generator</title>
 
     <style>
       body {
@@ -169,11 +169,20 @@
         transform: rotate(180deg);
       }
 
+      .form-field {
+        margin: 10px 0;
+      }
+      .extra-info {
+        font-size: 0.9em;
+        color: #343434;
+        font-style: italic;
+      }
+
       @media (min-width: 800px) {
         #config {
           width: 800px;
           display: flex;
-          align-items: flex-start;
+          align-items: stretch;
           gap: 20px;
           padding: 20px 20px 5px 20px;
         }
@@ -182,6 +191,7 @@
         }
         #config-input {
           flex: 1;
+          display: flex;
         }
       }
 
@@ -217,7 +227,7 @@
     <div id="config" class="no-print">
       <div id="config-labels">
         <h1>
-          Print Badges
+          Conference Badge
           <button id="print-btn" class="action-btn" onclick="window.print()" title="Print / Preview">
             <svg
               width="24px"
@@ -260,17 +270,36 @@
             Print
           </button>
         </h1>
-        <div>
+        <div class="form-field">
+          <label for="names">Enter names (each name in new line)</label>
+          <span
+            title="Values are saved in your browser and will be available next time you visit this page."
+            style="
+              display: inline-flex;
+              justify-content: center;
+              align-items: center;
+              width: 18px;
+              height: 18px;
+              border-radius: 50%;
+              background-color: #007bff;
+              color: white;
+              font-size: 12px;
+              margin-left: 5px;
+              cursor: help;
+            "
+            >i</span
+          >
+        </div>
+        <div class="form-field">
           <label for="portrait">Portrait</label>
           <input type="radio" name="orientation" id="portrait" onchange="setOrientation(true)" />
           <label for="landscape">Landscape</label>
           <input type="radio" name="orientation" id="landscape" checked onchange="setOrientation(false)" />
         </div>
-        <div>
-          <label for="names">Enter names (each name in new line)</label>
-          <p style="font-style: italic">
+        <div class="form-field">
+          <p class="extra-info">
             When you are ready (entering names), press print button (or <code>CTRL + P</code>), select page orientation
-            and print all pages. You can also save it as PDF and send it to other to print it
+            and print all pages. You can also save it as PDF and send it to other to print it.
           </p>
         </div>
       </div>

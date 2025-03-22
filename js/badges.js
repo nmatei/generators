@@ -58,6 +58,7 @@ function initEvents() {
 function displayNames(names, portrait = true) {
   names = [...names];
   const itemsPerPage = portrait ? 9 : 5; // 5 because will duplicate each name
+  names.sort((a, b) => a.localeCompare(b));
 
   if (names.length % itemsPerPage !== 0) {
     new Array(itemsPerPage - (names.length % itemsPerPage)).fill(0).forEach(() => names.push(" "));

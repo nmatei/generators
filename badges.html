@@ -7,7 +7,6 @@
       content="width=device-width, user-scalable=no, initial-scale=1, minimum-scale=0.5, maximum-scale=2"
     />
     <title>Conference Badge generator</title>
-    <!-- Reference to external favicon.ico file -->
     <link rel="icon" href="images/badge-favicon.ico" type="image/x-icon" />
     <style>
       :root {
@@ -114,7 +113,7 @@
         text-transform: uppercase;
       }
       .badge div {
-        padding: 5px;
+        padding: 5px 10px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -386,6 +385,37 @@
           <input type="radio" name="orientation" id="portrait" onchange="setOrientation(true)" />
           <label for="landscape">Landscape</label>
           <input type="radio" name="orientation" id="landscape" checked onchange="setOrientation(false)" />
+        </div>
+        <div class="form-field">
+          <label>Badge Size (px):</label>
+          <input
+            type="number"
+            id="badgeWidth"
+            placeholder="Width"
+            min="150"
+            max="212"
+            required
+            style="width: 50px; margin-right: 5px"
+          />
+          <span>×</span>
+          <input
+            type="number"
+            id="badgeHeight"
+            placeholder="Height"
+            min="250"
+            max="350"
+            required
+            style="width: 50px; margin-left: 5px"
+          />
+          <button
+            id="resetSize"
+            class="action-btn"
+            onclick="resetBadgeSize()"
+            title="Reset to default size"
+            style="display: inline-flex; margin-left: 10px; padding: 2px 8px; min-height: 30px; font-size: 14px"
+          >
+            Reset
+          </button>
         </div>
         <div class="form-field">
           <p class="extra-info">

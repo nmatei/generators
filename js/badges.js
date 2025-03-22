@@ -1,5 +1,7 @@
 let portrait = document.body.classList.contains("portrait");
 const defaultFontSize = 36;
+const defaultBadgeWidth = 212;
+const defaultBadgeHeight = 350;
 
 function setOrientation(portraitValue) {
   portrait = portraitValue;
@@ -25,6 +27,7 @@ function setOrientation(portraitValue) {
   document.getElementById("portrait").checked = portraitValue;
   document.getElementById("landscape").checked = !portraitValue;
 
+  applyBadgeSize(); // Apply badge size limits based on orientation
   displayNames(getStoredNames(), portraitValue);
 }
 
@@ -40,6 +43,54 @@ function storeNames(names) {
   localStorage.setItem("badgeNames", JSON.stringify(names));
 }
 
+function getBadgeSize() {
+  return JSON.parse(localStorage.getItem("badgeSize")) || { width: defaultBadgeWidth, height: defaultBadgeHeight };
+}
+
+function storeBadgeSize(width, height) {
+  localStorage.setItem("badgeSize", JSON.stringify({ width, height }));
+}
+
+function resetBadgeSize() {
+  // Set input values to defaults
+  $("#badgeWidth").value = defaultBadgeWidth;
+  $("#badgeHeight").value = defaultBadgeHeight;
+
+  // Apply the default size
+  applyBadgeSize();
+}
+
+function applyBadgeSize() {
+  let width = parseInt($("#badgeWidth").value) || defaultBadgeWidth;
+  let height = parseInt($("#badgeHeight").value) || defaultBadgeHeight;
+
+  // Apply height limits based on orientation
+  const maxHeight = Math.min(height, portrait ? 340 : 350);
+
+  // Store the new size only if it's different from the current stored size
+  const currentSize = getBadgeSize();
+  if (currentSize.width !== width || currentSize.height !== height) {
+    storeBadgeSize(width, height);
+  }
+
+  // Update global CSS rule for badge size
+  const badgeSizeStyle = document.getElementById("badge-size-style") || document.createElement("style");
+  if (!badgeSizeStyle.id) {
+    badgeSizeStyle.id = "badge-size-style";
+    document.head.appendChild(badgeSizeStyle);
+  }
+
+  badgeSizeStyle.textContent = `
+    .badge {
+      width: ${width}px !important;
+      height: ${maxHeight}px !important;
+    }
+  `;
+
+  // Refresh the display to apply the new size
+  displayNames(getStoredNames(), portrait);
+}
+
 function initEvents() {
   $("#names").addEventListener(
     "input",
@@ -53,6 +104,10 @@ function initEvents() {
       displayNames(names, portrait);
     }, 300)
   );
+
+  // Add event listeners for badge size inputs with debounce
+  $("#badgeWidth").addEventListener("input", debounce(applyBadgeSize, 300));
+  $("#badgeHeight").addEventListener("input", debounce(applyBadgeSize, 300));
 }
 
 function displayNames(names, portrait = true) {
@@ -89,7 +144,11 @@ function displayNames(names, portrait = true) {
 
 const names = getStoredNames();
 $("#names").value = names.join("\n");
-displayNames(names, portrait);
+
+// Initialize badge size inputs
+const badgeSize = getBadgeSize();
+$("#badgeWidth").value = badgeSize.width;
+$("#badgeHeight").value = badgeSize.height;
 
 // Initialize orientation based on body class
 const initialPortrait = document.body.classList.contains("portrait");

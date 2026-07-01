@@ -14,7 +14,7 @@ export var COLORS = [
 var DEFAULTS = {
   renderTo: "#virtue-ring",
   size: 300,
-  nodeSize: 80,
+  nodeSize: 96,
   borderWidth: 3,
   fontSize: 10,
   fontFamily: "Georgia, serif",

@@ -6,7 +6,7 @@
     <title>Virtue Ring Generator</title>
     <style>
       * { box-sizing: border-box; margin: 0; padding: 0; }
-      body { font-family: Georgia, serif; background: #f5f5f5; display: flex; min-height: 100vh; }
+      body { font-family: Georgia, serif; background: #f5f5f5; display: flex; height: 100vh; overflow: hidden; }
 
       #preview {
         flex: 1;
@@ -20,14 +20,14 @@
 
       #settings {
         width: 320px;
+        height: 100vh;
         background: white;
         border-left: 1px solid #ddd;
         padding: 20px;
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
         overflow-y: auto;
       }
+
+      #settings > * + * { margin-top: 14px; }
 
       #settings h2 { font-size: 16px; color: #333; margin-bottom: 4px; }
 
@@ -128,7 +128,7 @@
 
       <div class="form-field">
         <label for="nodeSize">Node size (px)</label>
-        <input type="number" id="nodeSize" value="80" min="20" max="200" step="2" />
+        <input type="number" id="nodeSize" value="96" min="20" max="200" step="2" />
       </div>
 
       <div class="form-field">
@@ -176,17 +176,17 @@
       ];
 
       var stored = null;
-      try { stored = JSON.parse(localStorage.getItem("virtue-ring-settings")); } catch(e) {}
+      try { stored = JSON.parse(localStorage.getItem("virtue-ring-settings-v3")); } catch(e) {}
       var settings = stored || {
         size: 300,
-        nodeSize: 80,
+        nodeSize: 96,
         borderWidth: 3,
         fontSize: 10,
         nodes: DEFAULT_NODES
       };
 
       function saveSettings() {
-        try { localStorage.setItem("virtue-ring-settings", JSON.stringify(settings)); } catch(e) {}
+        try { localStorage.setItem("virtue-ring-settings-v3", JSON.stringify(settings)); } catch(e) {}
       }
 
       function getRings() {
@@ -223,6 +223,7 @@
         var nodesJson = JSON.stringify(settings.nodes, null, 4)
           .replace(/"([^"]+)":/g, '$1:');
         document.getElementById("code-output").textContent =
+          '<script src="https://nmatei.github.io/generators/docs/virtue-ring.js"><\/script>\n\n' +
           'VirtueRing.render({\n  renderTo: "#ring",\n  size: ' + settings.size +
           ',\n  nodeSize: ' + settings.nodeSize +
           ',\n  borderWidth: ' + settings.borderWidth +

@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Virtue Ring Generator</title>
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body { font-family: Georgia, serif; background: #f5f5f5; display: flex; min-height: 100vh; }
+
+      #preview {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px;
+      }
+
+      #ring { display: flex; align-items: center; justify-content: center; }
+
+      #settings {
+        width: 320px;
+        background: white;
+        border-left: 1px solid #ddd;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        overflow-y: auto;
+      }
+
+      #settings h2 { font-size: 16px; color: #333; margin-bottom: 4px; }
+
+      .form-field {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .form-field label { font-size: 12px; color: #666; font-family: sans-serif; }
+
+      .form-field input[type="number"],
+      .form-field input[type="text"] {
+        padding: 5px 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 13px;
+        font-family: sans-serif;
+      }
+
+      .form-field input[type="range"] { width: 100%; }
+
+      .node-list { display: flex; flex-direction: column; gap: 8px; }
+
+      .node-row {
+        display: grid;
+        grid-template-columns: 1fr 60px 60px 24px;
+        gap: 4px;
+        align-items: center;
+      }
+
+      .node-row input[type="text"] {
+        padding: 4px 6px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 12px;
+        font-family: sans-serif;
+      }
+
+      .node-row input[type="color"] {
+        width: 100%;
+        height: 28px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 1px;
+        cursor: pointer;
+      }
+
+      .node-row button {
+        background: #eee;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        height: 28px;
+        line-height: 1;
+      }
+
+      .node-row button:hover { background: #f99; }
+
+      #add-node {
+        background: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 6px 12px;
+        font-size: 13px;
+        cursor: pointer;
+        font-family: sans-serif;
+      }
+
+      #add-node:hover { background: #43A047; }
+
+      hr { border: none; border-top: 1px solid #eee; }
+
+      .node-row-header {
+        display: grid;
+        grid-template-columns: 1fr 60px 60px 24px;
+        gap: 4px;
+        font-size: 11px;
+        color: #999;
+        font-family: sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="preview">
+      <div id="ring"></div>
+    </div>
+
+    <div id="settings">
+      <h2>⚙️ Settings</h2>
+
+      <div class="form-field">
+        <label for="size">Ring size (px)</label>
+        <input type="number" id="size" value="300" min="100" max="800" step="10" />
+      </div>
+
+      <div class="form-field">
+        <label for="nodeSize">Node size (px)</label>
+        <input type="number" id="nodeSize" value="80" min="20" max="200" step="2" />
+      </div>
+
+      <div class="form-field">
+        <label for="borderWidth">Border width (px)</label>
+        <input type="number" id="borderWidth" value="3" min="0" max="10" step="1" />
+      </div>
+
+      <div class="form-field">
+        <label for="fontSize">Font size (px)</label>
+        <input type="number" id="fontSize" value="10" min="6" max="24" step="1" />
+      </div>
+
+      <hr />
+
+      <h2>Nodes</h2>
+
+      <div class="node-row-header">
+        <span>Label</span>
+        <span>Color</span>
+        <span>Text</span>
+        <span></span>
+      </div>
+
+      <div class="node-list" id="node-list"></div>
+
+      <button id="add-node">+ Add node</button>
+
+      <hr />
+
+      <h2>Usage</h2>
+      <pre id="code-output" style="font-size:10px;background:#f8f8f8;padding:10px;border-radius:4px;overflow-x:auto;white-space:pre-wrap;font-family:monospace;color:#333;"></pre>
+    </div>
+
+    <script src="./docs/virtue-ring.js"></script>
+    <script>
+      var DEFAULT_NODES = [
+        { label: "credința", color: "#4CAF50", textColor: "#fff" },
+        { label: "fapta", color: "#00BCD4", textColor: "#fff" },
+        { label: "cunoștința", color: "#FFC107", textColor: "#333" },
+        { label: "înfrânarea", color: "#FF8A65", textColor: "#fff" },
+        { label: "răbdarea", color: "#EC407A", textColor: "#fff" },
+        { label: "evlavia", color: "#FFEB3B", textColor: "#333" },
+        { label: "dragostea de frați", color: "#EF5350", textColor: "#fff" },
+        { label: "iubirea de oameni", color: "#5C6BC0", textColor: "#fff" }
+      ];
+
+      var stored = null;
+      try { stored = JSON.parse(localStorage.getItem("virtue-ring-settings")); } catch(e) {}
+      var settings = stored || {
+        size: 300,
+        nodeSize: 80,
+        borderWidth: 3,
+        fontSize: 10,
+        nodes: DEFAULT_NODES
+      };
+
+      function saveSettings() {
+        try { localStorage.setItem("virtue-ring-settings", JSON.stringify(settings)); } catch(e) {}
+      }
+
+      function getRings() {
+        var rows = document.querySelectorAll(".node-row[data-index]");
+        var nodes = [];
+        rows.forEach(function(row) {
+          var label = row.querySelector(".node-label").value.trim();
+          var color = row.querySelector(".node-color").value;
+          var textColor = row.querySelector(".node-text-color").value;
+          if (label) nodes.push({ label: label, color: color, textColor: textColor });
+        });
+        return nodes;
+      }
+
+      function rerender() {
+        settings.nodes = getRings();
+        settings.size = parseInt(document.getElementById("size").value) || 300;
+        settings.nodeSize = parseInt(document.getElementById("nodeSize").value) || 80;
+        settings.borderWidth = parseInt(document.getElementById("borderWidth").value) || 3;
+        settings.fontSize = parseInt(document.getElementById("fontSize").value) || 10;
+        saveSettings();
+        VirtueRing.render({
+          renderTo: "#ring",
+          size: settings.size,
+          nodeSize: settings.nodeSize,
+          borderWidth: settings.borderWidth,
+          fontSize: settings.fontSize,
+          nodes: settings.nodes
+        });
+        updateCode();
+      }
+
+      function updateCode() {
+        var nodesJson = JSON.stringify(settings.nodes, null, 4)
+          .replace(/"([^"]+)":/g, '$1:');
+        document.getElementById("code-output").textContent =
+          'VirtueRing.render({\n  renderTo: "#ring",\n  size: ' + settings.size +
+          ',\n  nodeSize: ' + settings.nodeSize +
+          ',\n  borderWidth: ' + settings.borderWidth +
+          ',\n  fontSize: ' + settings.fontSize +
+          ',\n  nodes: ' + nodesJson + '\n});';
+      }
+
+      function removeNode(index) {
+        settings.nodes.splice(index, 1);
+        renderNodeList();
+        rerender();
+      }
+
+      function renderNodeList() {
+        var list = document.getElementById("node-list");
+        list.innerHTML = "";
+        settings.nodes.forEach(function(node, i) {
+          var row = document.createElement("div");
+          row.className = "node-row";
+          row.setAttribute("data-index", i);
+          row.innerHTML =
+            '<input class="node-label" type="text" value="' + node.label.replace(/"/g, '&quot;') + '" />' +
+            '<input class="node-color" type="color" value="' + node.color + '" />' +
+            '<input class="node-text-color" type="color" value="' + (node.textColor || "#ffffff") + '" />' +
+            '<button title="Remove">&times;</button>';
+          row.querySelector("button").addEventListener("click", function() { removeNode(i); });
+          row.querySelectorAll("input").forEach(function(inp) {
+            inp.addEventListener("input", rerender);
+          });
+          list.appendChild(row);
+        });
+      }
+
+      document.getElementById("add-node").addEventListener("click", function() {
+        var palette = VirtueRing.COLORS;
+        var c = palette[settings.nodes.length % palette.length];
+        settings.nodes.push({ label: "node " + (settings.nodes.length + 1), color: c.color, textColor: c.textColor });
+        renderNodeList();
+        rerender();
+      });
+
+      ["size", "nodeSize", "borderWidth", "fontSize"].forEach(function(id) {
+        document.getElementById(id).addEventListener("input", rerender);
+        document.getElementById(id).value = settings[id];
+      });
+
+      renderNodeList();
+      rerender();
+    </script>
+  </body>
+</html>

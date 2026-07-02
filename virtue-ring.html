@@ -19,10 +19,11 @@
       #ring { display: flex; align-items: center; justify-content: center; }
 
       #settings {
-        width: 320px;
+        width: 400px;
+        min-width: 320px;
         height: 100vh;
         background: white;
-        border-left: 1px solid #ddd;
+        border-left: 1px solid #453636;
         padding: 20px;
         overflow-y: auto;
       }
@@ -103,6 +104,25 @@
 
       hr { border: none; border-top: 1px solid #eee; }
 
+      details { border: 1px solid #eee; border-radius: 6px; }
+      details + details { margin-top: 10px; }
+      details summary {
+        padding: 10px 14px;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: bold;
+        color: #333;
+        list-style: none;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        user-select: none;
+      }
+      details summary::-webkit-details-marker { display: none; }
+      details summary::before { content: "▶"; font-size: 10px; color: #999; transition: transform 0.2s; }
+      details[open] summary::before { transform: rotate(90deg); }
+      details .details-body { padding: 0 14px 14px; display: flex; flex-direction: column; gap: 14px; }
+
       .node-row-header {
         display: grid;
         grid-template-columns: 1fr 60px 60px 24px;
@@ -119,47 +139,48 @@
     </div>
 
     <div id="settings">
-      <h2>⚙️ Settings</h2>
+      <details open>
+        <summary>⚙️ Settings</summary>
+        <div class="details-body">
+          <div class="form-field">
+            <label for="size">Ring size (px)</label>
+            <input type="number" id="size" value="300" min="100" max="800" step="10" />
+          </div>
+          <div class="form-field">
+            <label for="nodeSize">Node size (px)</label>
+            <input type="number" id="nodeSize" value="96" min="20" max="200" step="2" />
+          </div>
+          <div class="form-field">
+            <label for="borderWidth">Border width (px)</label>
+            <input type="number" id="borderWidth" value="3" min="0" max="10" step="1" />
+          </div>
+          <div class="form-field">
+            <label for="fontSize">Font size (px)</label>
+            <input type="number" id="fontSize" value="10" min="6" max="24" step="1" />
+          </div>
+        </div>
+      </details>
 
-      <div class="form-field">
-        <label for="size">Ring size (px)</label>
-        <input type="number" id="size" value="300" min="100" max="800" step="10" />
-      </div>
+      <details open>
+        <summary>🔵 Nodes</summary>
+        <div class="details-body">
+          <div class="node-row-header">
+            <span>Label</span>
+            <span>Color</span>
+            <span>Text</span>
+            <span></span>
+          </div>
+          <div class="node-list" id="node-list"></div>
+          <button id="add-node">+ Add node</button>
+        </div>
+      </details>
 
-      <div class="form-field">
-        <label for="nodeSize">Node size (px)</label>
-        <input type="number" id="nodeSize" value="96" min="20" max="200" step="2" />
-      </div>
-
-      <div class="form-field">
-        <label for="borderWidth">Border width (px)</label>
-        <input type="number" id="borderWidth" value="3" min="0" max="10" step="1" />
-      </div>
-
-      <div class="form-field">
-        <label for="fontSize">Font size (px)</label>
-        <input type="number" id="fontSize" value="10" min="6" max="24" step="1" />
-      </div>
-
-      <hr />
-
-      <h2>Nodes</h2>
-
-      <div class="node-row-header">
-        <span>Label</span>
-        <span>Color</span>
-        <span>Text</span>
-        <span></span>
-      </div>
-
-      <div class="node-list" id="node-list"></div>
-
-      <button id="add-node">+ Add node</button>
-
-      <hr />
-
-      <h2>Usage</h2>
-      <pre id="code-output" style="font-size:10px;background:#f8f8f8;padding:10px;border-radius:4px;overflow-x:auto;white-space:pre-wrap;font-family:monospace;color:#333;"></pre>
+      <details>
+        <summary>📋 Usage</summary>
+        <div class="details-body">
+          <pre id="code-output" style="font-size:10px;background:#f8f8f8;padding:10px;border-radius:4px;overflow-x:auto;white-space:pre-wrap;font-family:monospace;color:#333;margin:0"></pre>
+        </div>
+      </details>
     </div>
 
     <script src="./docs/virtue-ring.js"></script>

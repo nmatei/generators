@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<title>2 Petru 1:5-7 – Semne de carte</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #f0f0f0;
+    font-family: Georgia, serif;
+  }
+
+  @page {
+    size: A4 landscape;
+    margin: 6mm;
+  }
+
+  .page {
+    width: 297mm;
+    height: 210mm;
+    margin: 0 auto;
+    padding: 4mm;
+    background: white;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: 550px;
+    gap: 2mm;
+    overflow: hidden;
+  }
+
+  @media print {
+    body { background: white; }
+    .page { margin: 0; padding: 0; width: 100%; }
+  }
+
+  .card {
+    border: 1px dashed #aaa;
+    border-radius: 5px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    background: white;
+    page-break-inside: avoid;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  .card-title {
+    font-size: 13pt;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 2px;
+    color: #5C6BC0;
+    letter-spacing: 0.3px;
+    font-family: Georgia, serif;
+  }
+
+  .card-intro {
+    font-size: 8pt;
+    color: #444;
+    font-style: italic;
+    text-align: center;
+    margin: 2px 0 3px 0;
+    line-height: 1.5;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 1px 0 3px 0;
+  }
+
+  .verse-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .vline {
+    display: flex;
+    align-items: baseline;
+    gap: 2px;
+    font-size: 8pt;
+    line-height: 1.6;
+    flex-wrap: wrap;
+  }
+
+  .vnum {
+    font-size: 4pt;
+    font-weight: bold;
+    color: #555;
+    min-width: 5px;
+    flex-shrink: 0;
+    vertical-align: super;
+    line-height: 1;
+    position: relative;
+    top: -4px;
+  }
+
+  .indent {
+    min-width: 5px;
+    flex-shrink: 0;
+  }
+
+  .plain { color: #222; }
+
+  /* Keyword chips */
+  .kw {
+    display: inline-block;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-weight: bold;
+    white-space: nowrap;
+    font-size: 8pt;
+  }
+
+  .kw-credinta    { background: #4CAF50; color: #fff; }
+  .kw-fapta       { background: #00BCD4; color: #fff; }
+  .kw-cunostinta  { background: #FFC107; color: #222; }
+  .kw-infranarea  { background: #FF8A65; color: #fff; }
+  .kw-rabdarea    { background: #EC407A; color: #fff; }
+  .kw-evlavia     { background: #FFEB3B; color: #222; }
+  .kw-dragoste    { background: #EF5350; color: #fff; }
+  .kw-iubirea     { background: #5C6BC0; color: #fff; }
+
+  .card-chain {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 8px 0;
+  }
+
+  .card-logo {
+    padding-top: 2px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .card-logo img {
+    max-height: 48px;
+    max-width: 100%;
+    object-fit: contain;
+    opacity: 0.85;
+  }
+</style>
+</head>
+<body>
+<div class="page" id="page"></div>
+
+<!-- virtue-ring library (local copy)
+     Public URL: https://nmatei.github.io/generators/docs/virtue-ring.js -->
+<script src="libs/virtue-ring.js"></script>
+<script>
+const RING_NODES = [
+  { label: "credința",        color: "#4CAF50", textColor: "#fff" },
+  { label: "fapta",           color: "#00BCD4", textColor: "#fff" },
+  { label: "cunoștința",      color: "#FFC107", textColor: "#333" },
+  { label: "înfrânarea",      color: "#FF8A65", textColor: "#333" },
+  { label: "răbdarea",        color: "#EC407A", textColor: "#fff" },
+  { label: "evlavia",         color: "#FFEB3B", textColor: "#333" },
+  { label: "dragostea<br>de frați",  color: "#EF5350", textColor: "#fff" },
+  { label: "iubirea<br>de oameni",   color: "#5C6BC0", textColor: "#fff" }
+];
+
+function createCardHTML({ id }) {
+  return `
+  <div class="card-title">📌 2 Petru 1:5-7</div>
+  <hr class="divider">
+  <div class="card-intro">De aceea, dați-vă și voi toate silințele<br>ca să uniți</div>
+  <div class="verse-lines">
+    <div class="vline">
+      <span class="indent"></span>
+      <span class="plain">cu</span>
+      <span class="kw kw-credinta">credința</span>
+      <span class="plain">voastră</span>
+      <span class="kw kw-fapta">fapta</span>
+      <span class="plain">;</span>
+    </div>
+    <div class="vline">
+      <span class="indent"></span>
+      <span class="plain">cu</span>
+      <span class="kw kw-fapta">fapta</span>
+      <span class="plain">,</span>
+      <span class="kw kw-cunostinta">cunoștința</span>
+      <span class="plain">;</span>
+    </div>
+    <div class="vline">
+      <sup class="vnum">6</sup>
+      <span class="plain">cu</span>
+      <span class="kw kw-cunostinta">cunoștința</span>
+      <span class="plain">,</span>
+      <span class="kw kw-infranarea">înfrânarea</span>
+      <span class="plain">;</span>
+    </div>
+    <div class="vline">
+      <span class="indent"></span>
+      <span class="plain">cu</span>
+      <span class="kw kw-infranarea">înfrânarea</span>
+      <span class="plain">,</span>
+      <span class="kw kw-rabdarea">răbdarea</span>
+      <span class="plain">;</span>
+    </div>
+    <div class="vline">
+      <span class="indent"></span>
+      <span class="plain">cu</span>
+      <span class="kw kw-rabdarea">răbdarea</span>
+      <span class="plain">,</span>
+      <span class="kw kw-evlavia">evlavia</span>
+      <span class="plain">;</span>
+    </div>
+    <div class="vline">
+      <sup class="vnum">7</sup>
+      <span class="plain">cu</span>
+      <span class="kw kw-evlavia">evlavia</span>
+      <span class="plain">,</span>
+      <span class="kw kw-dragoste">dragostea de frați</span>
+      <span class="plain">;</span>
+    </div>
+    <div class="vline">
+      <span class="indent"></span>
+      <span class="plain">cu</span>
+      <span class="kw kw-dragoste">dragostea de frați</span>
+      <span class="plain">,</span>
+      <span class="kw kw-iubirea">iubirea de oameni</span>
+    </div>
+  </div>
+  <div class="card-chain" id="ring-${id}"></div>
+  <div class="card-logo">
+    <img src="logo.png" alt="">
+  </div>
+`;
+}
+
+const page = document.getElementById('page');
+for (let i = 0; i < 4; i++) {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = createCardHTML({ id: i });
+  page.appendChild(card);
+  VirtueRing.render({
+    renderTo: `#ring-${i}`,
+    size: 220,
+    nodeSize: 70,
+    borderWidth: 3,
+    fontSize: 10,
+    nodes: RING_NODES
+  });
+}
+</script>
+</body>
+</html>
